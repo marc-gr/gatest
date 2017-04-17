@@ -75,9 +75,11 @@ type population struct {
 
 func newPopulation(size int, uniformRate, mutationRate float64, target []byte, elitist bool) *population {
 	return &population{
-		individuals: make([]*individual, size),
-		target:      target,
-		elitist:     elitist,
+		individuals:  make([]*individual, size),
+		target:       target,
+		elitist:      elitist,
+		uniformRate:  uniformRate,
+		mutationRate: mutationRate,
 	}
 }
 
@@ -101,8 +103,8 @@ func (pop *population) evolve() {
 	for i := startAt; i < len(pop.individuals); i++ {
 		a := pop.individualByTournament(5)
 		b := pop.individualByTournament(5)
-		c := crossover(a, b, 0.5)
-		c.mutate(0.015)
+		c := crossover(a, b, pop.uniformRate)
+		c.mutate(pop.mutationRate)
 		evolved.individuals[i] = c
 	}
 
